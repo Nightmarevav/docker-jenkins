@@ -1,0 +1,22 @@
+version: '2'
+services:
+  master:
+    image: jenkinsci/jenkins
+    restart: always
+    environment:
+      JAVA_OPTS: "-Djava.awt.headless=true"
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - /dockerdata/jenkins:/var/jenkins_home
+  slave:
+    image: jenkinsci/jnlp-slave
+    restart: always
+    depends_on:
+      - master
+    environment:
+      JENKINS_URL: "http://192.168.99.100:8080"
+     # JENKINS_TUNNEL: "192.168.99.101:8080"
+      JENKINS_SECRET: "69925b58e7079e7dae908b02ab0466a183bda003f34352dad308003cb0453603"
+      JENKINS_AGENT_NAME: "slave"
